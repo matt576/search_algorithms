@@ -1,2 +1,2 @@
 # search_algorithms
-Implementation os basic search algorithms (BSF, DFS, Dijkstra)
+Implementation of uninformed graph search algorithms (BFS, DFS, Dijkstra)
