@@ -1,8 +1,8 @@
-
-class Queue():
+class Queue:
     """
     This class defines a queue fringe
     """
+
     def __init__(self):
         self.list = []
 
@@ -29,10 +29,12 @@ class Queue():
         """
         return len(self.list)
 
-class Stack():
+
+class Stack:
     """
     This class defines a stack fringe
     """
+
     def __init__(self):
         self.list = []
 
@@ -59,10 +61,12 @@ class Stack():
         """
         return len(self.list)
 
-class Priority_Queue():
+
+class Priority_Queue:
     """
     This class defines a priority queue fringe
     """
+
     def __init__(self):
         self.dict = {}
 
@@ -114,11 +118,13 @@ class Priority_Queue():
         """
         return len(self.dict.keys())
 
-class ClosedList():
+
+class ClosedList:
     """
     The closed list keeps all the states that already have been expanded. The closed list only exists in the
     Graph Search algorithms but not in the Search Tree algorithms
     """
+
     def __init__(self):
         self.list = []
 
@@ -139,14 +145,14 @@ class ClosedList():
         self.list.append(state)
 
 
-class Graph():
+class Graph:
     """
     The Graph keeps track of the actual graph, the actual solution and path costs to every node on the shortest path
     """
+
     def __init__(self, environment):
         self.start_state = environment.start_state
         self.dict = {self.start_state: {"parent": None, "cost": 0}}
-
 
     def add(self, child, parent, cost=0):
         """
@@ -158,10 +164,16 @@ class Graph():
         :return: void
         """
         if child not in self.dict.keys():
-            self.dict[child] = {"parent": parent, "cost": self.get_actual_cost(parent) + cost}
+            self.dict[child] = {
+                "parent": parent,
+                "cost": self.get_actual_cost(parent) + cost,
+            }
         else:
             if self.get_actual_cost(child) > self.get_actual_cost(parent) + cost:
-                self.dict[child] = {"parent": parent, "cost": self.get_actual_cost(parent) + cost}
+                self.dict[child] = {
+                    "parent": parent,
+                    "cost": self.get_actual_cost(parent) + cost,
+                }
 
     def get_actual_cost(self, state):
         """

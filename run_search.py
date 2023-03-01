@@ -3,88 +3,127 @@ import environment
 import util
 
 
-class Agent():
+class Agent:
     def __init__(self):
         self.env = environment.Environment()
         self.graph = util.Graph(self.env)
 
-    #implementHere
-    def depth_first_search(self):
-        # TODO initialize a stack
-        stack = util.Stack()
-        # TODO get the start state of the environment and push it on the stack
-        start_state = self.env.get_start_state()
-        stack.push(start_state)
-        # TODO initialize a ClosedList called closed_list
-        closed_list = util.ClosedList()
+    def depth_first_search(self):  # depth first search
+        stack = util.Stack()  # initialize a stack
+
+        start_state = (
+            self.env.get_start_state()
+        )  # get the start state of the environment
+        stack.push(start_state)  # add the start state to the stack
+
+        closed_list = util.ClosedList()  # initialize a closed list
         while stack.get_number_of_entries() > 0:
-            # TODO get the first element of the stack
-            s = stack.pop()
+            s = stack.pop()  # get the first element of the stack
             print("Expand node {}".format(s))
-            # TODO if the closed_list does not contain state s already
-            if closed_list.contains(s) is False:
-                # TODO add state s to the closed_list
-                closed_list.add(s)
-                # TODO for every child_tuple in the list of successors from s
-                for child_tuple in self.env.get_successors(s):
-                    # TODO extract the child, action, reward from the variable child_tuple
-                    child, action, reward = child_tuple
-                    # TODO add the child and parent node s to the graph
-                    self.graph.add(child=child, parent=s)
-                    # TODO if child node is goal node
-                    if self.env.is_goal(child):
-                        # TODO return actual solution from the graph with the actual child as input
-                        return self.graph.get_actual_solution(child)
-                    # TODO push the child on the stack
-                    stack.push(child)
+
+            if (
+                closed_list.contains(s) is False
+            ):  # if the node is not in the closed list
+                closed_list.add(s)  # add the node to the closed list
+
+                for child_tuple in self.env.get_successors(
+                    s
+                ):  # get the successors of the node
+                    (
+                        child,
+                        action,
+                        reward,
+                    ) = child_tuple  # get the child node, action and reward
+
+                    self.graph.add(
+                        child=child, parent=s
+                    )  # add the child node to the graph
+
+                    if self.env.is_goal(child):  # if the child node is the goal node
+                        return self.graph.get_actual_solution(
+                            child
+                        )  # return the solution
+
+                    stack.push(child)  # add the child node to the stack
                     print("Add node {} to stack".format(child))
 
-    # implementHere
-    def breadth_first_search(self):
-        # TODO implement breadth first search algorithm
-        queue = util.Queue()
-        start_state = self.env.get_start_state()
-        queue.enqueue(start_state)
-        closed_list = util.ClosedList()
-        while queue.get_number_of_entries() > 0:
-            s = queue.dequeue()
-            print("Expand node {}".format(s))
-            if closed_list.contains(s) is False:
-                closed_list.add(s)
-                for child_tuple in self.env.get_successors(s):
-                    child, action, reward = child_tuple
-                    self.graph.add(child=child, parent=s)
-                    if self.env.is_goal(child):
-                        return self.graph.get_actual_solution(child)
-                    queue.enqueue(child)
-                    print("Add node {} to queue".format(child))
+    def breadth_first_search(self):  # breadth first search
+        queue = util.Queue()  # initialize a queue
+        start_state = (
+            self.env.get_start_state()
+        )  # get the start state of the environment
+        queue.enqueue(start_state)  # add the start state to the queue
+        closed_list = util.ClosedList()  # initialize a closed list
+        while queue.get_number_of_entries() > 0:  # while the queue is not empty
+            s = queue.dequeue()  # get the first element of the queue
+            print("Expand node {}".format(s))  # print the node
+            if (
+                closed_list.contains(s) is False
+            ):  # if the node is not in the closed list
+                closed_list.add(s)  # add the node to the closed list
+                for child_tuple in self.env.get_successors(
+                    s
+                ):  # get the successors of the node
+                    (
+                        child,
+                        action,
+                        reward,
+                    ) = child_tuple  # get the child node, action and reward
+                    self.graph.add(
+                        child=child, parent=s
+                    )  # add the child node to the graph
+                    if self.env.is_goal(child):  # if the child node is the goal node
+                        return self.graph.get_actual_solution(
+                            child
+                        )  # return the solution
+                    queue.enqueue(child)  # add the child node to the queue
+                    print("Add node {} to queue".format(child))  # print the node
 
+    def uniform_cost_search(self):  # uniform cost search
+        queue = util.Priority_Queue()  # initialize a priority queue
+        start_state = (
+            self.env.get_start_state()
+        )  # get the start state of the environment
+        queue.insert(
+            state=start_state, cost=0, graph=self.graph
+        )  # add the start state to the queue
+        closed_list = util.ClosedList()  # initialize a closed list
+        while queue.get_number_of_entries() > 0:  # while the queue is not empty
+            s = queue.pop()  # get the first element of the queue
+            print("Expand node {}".format(s))  # print the node
+            if self.env.is_goal(s):  # if the node is the goal node
+                return self.graph.get_actual_solution(s)  # return the solution
+            closed_list.add(s)  # add the node to the closed list
+            for child_tuple in self.env.get_successors(
+                s
+            ):  # get the successors of the node
+                child, action, cost = child_tuple  # get the child node, action and cost
+                self.graph.add(
+                    child=child, parent=s, cost=cost
+                )  # add the child node to the graph
+                if not queue.contains(child) and not closed_list.contains(
+                    child
+                ):  # if the child node is not in the queue and not in the closed list
+                    queue.insert(
+                        state=child, cost=cost, parent=s, graph=self.graph
+                    )  # add the child node to the queue
+                    print(
+                        "Add node {} to priority queue".format(child)
+                    )  # print the node
+                elif (
+                    queue.contains(child)  # if the child node is in the queue
+                    and queue.get_actual_cost(child)
+                    > self.graph.get_actual_cost(s)
+                    + cost  # and the actual cost of the child node is greater than the actual cost of the parent node + the cost of the action
+                ):
+                    queue.insert(
+                        state=child, cost=cost, parent=s, graph=self.graph
+                    )  # add the child node to the queue
+                    print(
+                        "Replace node {} in priority queue".format(child)
+                    )  # print the node
 
-    # implementHere
-    def uniform_cost_search(self):
-        # TODO implement uniform cost search algorithm
-        queue = util.Priority_Queue()
-        start_state = self.env.get_start_state()
-        queue.insert(state=start_state, cost=0, graph=self.graph)
-        closed_list = util.ClosedList()
-        while queue.get_number_of_entries() > 0:
-            s = queue.pop()
-            print("Expand node {}".format(s))
-            if self.env.is_goal(s):
-                return self.graph.get_actual_solution(s)
-            closed_list.add(s)
-            for child_tuple in self.env.get_successors(s):
-                child, action, cost = child_tuple
-                self.graph.add(child=child, parent=s, cost=cost)
-                if not queue.contains(child) and not closed_list.contains(child):
-                    queue.insert(state=child, cost=cost, parent=s, graph=self.graph)
-                    print("Add node {} to priority queue".format(child))
-                elif queue.contains(child) and queue.get_actual_cost(child) > self.graph.get_actual_cost(s) + cost:
-                    queue.insert(state=child, cost=cost, parent=s, graph=self.graph)
-                    print("Replace node {} in priority queue".format(child))
-
-
-    def run_search_algorithm(self, algorithm):
+    def run_search_algorithm(self, algorithm):  # run the search algorithm
         """
         Function calls the correct algorithm depending on the command args
         """
@@ -95,17 +134,19 @@ class Agent():
         elif algorithm == "UCS":
             solution = self.uniform_cost_search()
         else:
-            raise Exception("Wrong algorithm determined")
+            raise Exception("Please choose a valid algorithm")
 
         return solution
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = config.parser.parse_args()
     search_algorithm = args.search_algorithm
     agent = Agent()
     solution = agent.run_search_algorithm(search_algorithm)
 
-    print("Your solution when using {} is the action sequence {}.".format(args.search_algorithm, solution))
-
+    print(
+        "Your solution when using {} is the action sequence {}.".format(
+            args.search_algorithm, solution
+        )
+    )

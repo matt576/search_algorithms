@@ -1,12 +1,11 @@
-
-class Environment():
+class Environment:
     def __init__(self):
         self.num_rows_y = 3
         self.num_cols_x = 4
         self.win_state = [(3, 2)]
         self.lose_state = [(3, 1)]
         self.start_state = (0, 0)
-        self.list_of_blocked_states = [(1,1)]
+        self.list_of_blocked_states = [(1, 1)]
 
     def get_start_state(self):
         """
@@ -24,19 +23,21 @@ class Environment():
         successors = []
         for action in ["up", "down", "left", "right"]:
             if action == "up":
-                next_state = (x, y+1)
+                next_state = (x, y + 1)
             elif action == "down":
-                next_state = (x, y-1)
+                next_state = (x, y - 1)
             elif action == "left":
-                next_state = (x-1, y)
+                next_state = (x - 1, y)
             elif action == "right":
-                next_state = (x+1, y)
+                next_state = (x + 1, y)
 
-            if next_state[0] > self.num_cols_x - 1 or \
-                    next_state[0] < 0 or \
-                    next_state[1] > self.num_rows_y - 1 or \
-                    next_state[1] < 0 or \
-                    next_state in self.list_of_blocked_states:
+            if (
+                next_state[0] > self.num_cols_x - 1
+                or next_state[0] < 0
+                or next_state[1] > self.num_rows_y - 1
+                or next_state[1] < 0
+                or next_state in self.list_of_blocked_states
+            ):
                 continue
 
             successors.append((next_state, action, 1))
