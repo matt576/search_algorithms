@@ -146,7 +146,7 @@ if __name__ == "__main__":
     solution = agent.run_search_algorithm(search_algorithm)
 
     print(
-        "Your solution when using {} is the action sequence {}.".format(
+        "Your solution when using {} algorithm has the node sequence {}.".format(
             args.search_algorithm, solution
         )
     )
