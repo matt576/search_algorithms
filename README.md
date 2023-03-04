@@ -5,3 +5,5 @@ Implementation of uninformed graph search algorithms:
 - Uniform Cost Search (UCS) 
 
 Environment: 4x3 Gridworld, starting at state (0,0) and trying to reach state (4,3)
+
+Choose algorithm on 'config.py' file
